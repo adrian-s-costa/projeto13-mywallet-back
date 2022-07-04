@@ -8,9 +8,9 @@ dotenv.config();
 
 const app = express();
 
-// Aqui tb são middlewares
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+
 
 app.use(authRouter);
 app.use(transRouter)
