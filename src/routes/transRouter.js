@@ -1,10 +1,10 @@
-import { getTrans, createTrans } from '../controllers/transController'
+import { getTrans, createTrans } from '../controllers/transController.js'
 import validateUser from '../middlewares/validateUser.js';
 import { Router } from 'express';
 
 const router = Router();
 
-router.get('/posts', validateUser, getPosts);
-router.post('/create-trans', createTrans);
+router.post('/create-trans', validateUser, createTrans);
+router.get('/transacoes', validateUser, getTrans);
 
 export default router;

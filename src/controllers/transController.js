@@ -5,13 +5,14 @@ import dayjs from 'dayjs';
 export async function getTrans(req, res) {
   const session = res.locals.session;
 
-  const posts = await db
+  const trans = await db
     .collection('wallet')
-    .find({ userId: new objectId(session.userId) })
+    .find({_id: new objectId(session.userId)})
     .toArray();
 
-  res.send(posts);
+  res.send(trans);
 }
+
 
 export async function createTrans(req, res) {
   const trans = req.body;
@@ -19,7 +20,7 @@ export async function createTrans(req, res) {
   const token = authorization?.replace('Bearer ', '');
 
   const transSchema = joi.object({
-    valor: joi.string().required(),
+    valor: joi.number().required(),
     descricao: joi.string().required(),
     tipo: joi.string().required()
   });
@@ -30,24 +31,25 @@ export async function createTrans(req, res) {
     return res.sendStatus(422);
   }
 
-  const session = await db.collection('sessoes').findOne({ token });
+  const session = await db.collection('wallet').findOne({ token });
   
 
   if (!session) {
     return res.sendStatus(401);
   }
 
-  const userID = session.userId;
 
-  await db.collection('wallet').findOne({ userID })
-  await db.collection('wallet').updateOne({_id: userID}, {$set: {...transacoes, transacoes:[{
-        horario : dayjs().format('HH:mm:ss'),
+  await db.collection('wallet').updateOne({_id: new objectId(session.userId)}, {$push: { transacoes: {
+        horario: dayjs().format('HH:mm:ss'),
         tipo: trans.tipo,
         nome: trans.descricao,
         valor: trans.valor
-    }
-    ]}});
-    const obj = await db.collection('wallet').findOne({ userID })
-  res.status(201);
-  res.send(obj);
+    }}});
+
+    const user = await db
+  .collection('wallet')
+  .find({ _id: new objectId(session.userId) })
+  .toArray();
+  
+  res.sendStatus(201);
 }
