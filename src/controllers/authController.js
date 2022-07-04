@@ -28,8 +28,7 @@ export async function createUser(req, res) {
 
   //Cadastrar de fato os dados no banco com o a senha criptografada.
   await db.collection('wallet').insertOne({name: usuario.name, email: usuario.email, password: senhaCriptografada, transacoes:[]});
-  res.status(201);
-  res.send({name: usuario.name, email: usuario.email, transacoes:usuario.transacoes})
+  res.sendStatus(201);
 }
 
 export async function loginUser(req, res) {
@@ -52,7 +51,7 @@ export async function loginUser(req, res) {
   if (user && bcrypt.compareSync(usuario.password, user.password)) {
     const token = uuid();
 
-    await db.collection('wallet').insertOne({
+    await db.collection('sessoes').insertOne({
       token,
       userId: user._id
     });
