@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 app.use(authRouter);
-app.use(transRouter)
+app.use(transRouter);
 
 app.listen(process.env.PORT, ()=> {
     console.log("Server running on port " + process.env.PORT)
