@@ -15,5 +15,6 @@ app.use(cors());
 app.use(authRouter);
 app.use(transRouter)
 
-const PORT = process.env.PORT || 5010;
-app.listen(PORT);
+app.listen(process.env.PORT, ()=> {
+    console.log("Server running on port " + process.env.PORT)
+});
